@@ -1,0 +1,12 @@
+version: "1.0"
+
+services:
+  sast-test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        REQUIREMENTS_FILE: "requirements-test.txt"
+    volumes:
+      - ./tests:/SAST/tests
+    entrypoint: "pytest"
