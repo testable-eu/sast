@@ -1,19 +1,21 @@
 import asyncio
 import json
 import shutil
-from pathlib import Path
-from typing import Dict
+import logging
 import yaml
 
-import logging
-from core import loggermgr
-logger = logging.getLogger(loggermgr.logger_name(__name__))
+from pathlib import Path
+from typing import Dict
 
-from core.sast import SAST
+from src.logger_manager import logger_name
+from src.sast import SAST
 import config
+
+logger = logging.getLogger(logger_name(__name__))
 
 SAST_ROOT_DIR: Path = config.ROOT_SAST_DIR
 CODEQL_BUILD_TEMPLATE: Path = SAST_ROOT_DIR / "core/resources/_template_build.sh"
+
 
 class CodeQL(SAST):
     tool = "codeql"
@@ -71,7 +73,6 @@ class CodeQL(SAST):
         self.logging(what="launcher", message=f"result {res}", status="done.")
         return res
 
-
     def inspector(self, sast_res_file: Path, language: str) -> list[Dict]:
         self.logging(what="inspector", status="started...")
         with open(sast_res_file) as sarif_file:
@@ -97,7 +98,6 @@ class CodeQL(SAST):
                 findings.append(finding)
         self.logging(what="inspector", status="done.")
         return findings
-
 
     async def get_tool_version(self) -> str:
         return self.CODEQL_CONFIG["version"]
