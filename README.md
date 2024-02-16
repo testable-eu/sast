@@ -1,2 +1,2 @@
-# sast
+# SAST
 SAST tool interfaces
