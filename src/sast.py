@@ -52,13 +52,13 @@ class SAST(metaclass=abc.ABCMeta):
         return utils.build_timestamp_language_name(comp, language, now, extra="TPF")
 
     def logging(self, what="launcher", message=None, status=None):
-        messagestr = ""
+        message_str = ""
         if message:
-            messagestr = f" - {message}"
-        statusstr = ""
+            message_str = f" - {message}"
+        status_str = ""
         if status:
-            statusstr = f": {status}"
-        logger.info(f"SAST tool {self.tool} - {what}{messagestr}{statusstr}")
+            status_str = f": {status}"
+        logger.info(f"SAST tool {self.tool} - {what}{message_str}{status_str}")
 
     @staticmethod
     def get_norm_vuln(vuln: str, d_supported_vuln_map: Dict):
