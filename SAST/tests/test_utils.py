@@ -1,7 +1,5 @@
-import unittest
 import os
-from src.utils import is_windows, get_exception_message, build_timestamp_language_name, zipdir, load_yaml, \
-    load_sast_specific_config
+from SAST.src import is_windows, get_exception_message, build_timestamp_language_name, zipdir
 from datetime import datetime
 import zipfile
 

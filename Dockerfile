@@ -9,7 +9,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
 RUN apt-get update
 RUN apt-get install python3 python3-pip python-is-python3 -y
 
-COPY src ${SAST_HOME}/src
+COPY SAST/src ${SAST_HOME}/src
 
 COPY config.py ${SAST_HOME}/
 COPY config.py ${SAST_HOME}/

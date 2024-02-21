@@ -2,13 +2,12 @@ import asyncio
 import json
 import shutil
 import logging
-import yaml
 
 from pathlib import Path
 from typing import Dict
 
-from src.logger_manager import logger_name
-from src.sast import SAST
+from SAST.src.logger_manager import logger_name
+from SAST.src.sast import SAST
 import config
 
 logger = logging.getLogger(logger_name(__name__))
