@@ -3,10 +3,11 @@ import zipfile
 from typing import NoReturn
 from pathlib import Path
 from datetime import datetime
-from typing import Dict
-import config
-from sast.exceptions import InvalidSastTool
+from typing import Dict, List
 import yaml
+from sast.exceptions import InvalidSastTool, InvalidSastTools
+from sast.config import ROOT
+from importlib import import_module
 
 
 def zipdir(path, zip_file: zipfile.ZipFile) -> NoReturn:
@@ -55,18 +56,28 @@ def sast_tool_version_match(v1, v2, nv_max=3, ignore_saas=True) -> bool:
     return True
 
 
-def load_sast_specific_config(tool_name: str, tool_version: str) -> Dict:
-    try:
-        tool_config_path: Path = config.ROOT_SAST_DIR / \
-                                 load_yaml(config.SAST_CONFIG_FILE)["tools"][tool_name]["version"][tool_version][
-                                     "config"]
-    except KeyError:
-        e = InvalidSastTool(f"{tool_name}:{tool_version}")
-        raise e
-    return load_yaml(tool_config_path)
-
-
 def load_yaml(fpath) -> Dict:
     with open(fpath) as f:
         fdict: Dict = yaml.load(f, Loader=yaml.Loader)
     return fdict
+
+
+def load_sast_specific_config(tool_name: str, tool_version: str) -> Dict:
+    try:
+        tool_config_path: Path = load_yaml(ROOT / 'sast-config.yaml')["tools"][tool_name]["version"][tool_version][
+            "config"]
+    except KeyError:
+        e = InvalidSastTool(f"{tool_name}:{tool_version}")
+        raise e
+    return load_yaml(ROOT / tool_config_path)
+
+
+def filter_sast_tools(itools: list[Dict], language: str, exception_raised=True) -> List[Dict]:
+    for t in itools:
+        t["supported_languages"] = load_sast_specific_config(t["name"], t["version"])["supported_languages"]
+    tools = list(filter(lambda x: language in x["supported_languages"], itools))
+    if exception_raised and not tools:
+        e = InvalidSastTools()
+        # logger.error(get_exception_message(e))
+        raise e
+    return tools
