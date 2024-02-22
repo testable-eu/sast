@@ -7,7 +7,6 @@ from typing import Dict, List
 import yaml
 from sast.exceptions import InvalidSastTool, InvalidSastTools
 from sast.config import ROOT
-from importlib import import_module
 
 
 def zipdir(path, zip_file: zipfile.ZipFile) -> NoReturn:
@@ -78,6 +77,5 @@ def filter_sast_tools(itools: list[Dict], language: str, exception_raised=True) 
     tools = list(filter(lambda x: language in x["supported_languages"], itools))
     if exception_raised and not tools:
         e = InvalidSastTools()
-        # logger.error(get_exception_message(e))
         raise e
     return tools
