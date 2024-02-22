@@ -9,7 +9,7 @@ supported_languages:
   - "CPP"
   - "CSHARP"
   - "GO"
-tool_interface: "SAST.codeql.codeql_v2_13_1.codeql.CodeQL_v_2_13_1"
+tool_interface: "sast.codeql.codeql_v2_13_1.codeql.CodeQL_v_2_13_1"
 supported_vulnerability:
   xss: "xss"
 
