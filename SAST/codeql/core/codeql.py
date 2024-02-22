@@ -6,13 +6,14 @@ import logging
 from pathlib import Path
 from typing import Dict
 
-from SAST.src.logger_manager import logger_name
-from SAST.src.sast import SAST
+import sast.config
+from sast.logger_manager import logger_name
+from sast.sast_interface import SAST
 import config
 
 logger = logging.getLogger(logger_name(__name__))
 
-SAST_ROOT_DIR: Path = config.ROOT_SAST_DIR
+SAST_ROOT_DIR: Path = sast.config.ROOT
 CODEQL_BUILD_TEMPLATE: Path = SAST_ROOT_DIR / "core/resources/_template_build.sh"
 
 

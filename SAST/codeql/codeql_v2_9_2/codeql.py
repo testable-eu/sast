@@ -7,7 +7,8 @@ DIR: Path = Path(__file__).parent.resolve()
 SAST_DIR: Path = DIR.parent.parent.resolve()
 sys.path.append(str(SAST_DIR))
 
-from SAST.codeql.core.codeql import CodeQL
+from sast.codeql.core.codeql import CodeQL
+
 
 class CodeQL_v_2_9_2(CodeQL):
 
@@ -17,6 +18,3 @@ class CodeQL_v_2_9_2(CodeQL):
         self.CODEQL_CONFIG_FILE: Path = self.CODEQL_SCRIPT_DIR / "config.yaml"
         with open(self.CODEQL_CONFIG_FILE) as sast_config_file:
             self.CODEQL_CONFIG: Dict = yaml.load(sast_config_file, Loader=yaml.Loader)
-
-
-

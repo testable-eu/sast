@@ -1,4 +1,4 @@
-import SAST.src.errors
+import sast.errors as errors
 
 
 class SastScanFailed(Exception):

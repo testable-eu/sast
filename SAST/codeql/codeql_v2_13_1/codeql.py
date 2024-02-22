@@ -7,7 +7,8 @@ DIR: Path = Path(__file__).parent.resolve()
 SAST_DIR: Path = DIR.parent.parent.resolve()
 sys.path.append(str(SAST_DIR))
 
-from SAST.codeql.core.codeql import CodeQL
+from sast.codeql.core.codeql import CodeQL
+
 
 class CodeQL_v_2_13_1(CodeQL):
 
