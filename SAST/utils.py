@@ -3,10 +3,12 @@ import zipfile
 from typing import NoReturn
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Callable
 import yaml
 from sast.exceptions import InvalidSastTool, InvalidSastTools
 from sast.config import ROOT
+from importlib import import_module
+from sast.sast_interface import SAST
 
 
 def zipdir(path, zip_file: zipfile.ZipFile) -> NoReturn:
@@ -59,6 +61,15 @@ def load_yaml(fpath) -> Dict:
     with open(fpath) as f:
         fdict: Dict = yaml.load(f, Loader=yaml.Loader)
     return fdict
+
+
+def get_class_from_str(class_str: str) -> Callable[[], SAST]:
+    try:
+        module_path, class_name = class_str.rsplit('.', 1)
+        module = import_module(module_path)
+        return getattr(module, class_name)
+    except (ImportError, AttributeError) as e:
+        raise ImportError(class_str)
 
 
 def load_sast_specific_config(tool_name: str, tool_version: str) -> Dict:
