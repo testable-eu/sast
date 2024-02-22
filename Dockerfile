@@ -1,7 +1,7 @@
 FROM malt33/php-cpg
 
-ARG SAST_HOME="/SAST"
-WORKDIR $SAST_HOME
+ARG HOME="/sast"
+WORKDIR $HOME
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
@@ -9,15 +9,15 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
 RUN apt-get update
 RUN apt-get install python3 python3-pip python-is-python3 -y
 
-COPY SAST/src ${SAST_HOME}/src
+COPY sast/ ${HOME}/sast
+COPY tests/ ${HOME}/tests
 
-COPY config.py ${SAST_HOME}/
-COPY config.py ${SAST_HOME}/
-COPY pytest.ini ${SAST_HOME}/pytest.ini
+COPY config.py ${HOME}/
+COPY config.py ${HOME}/
+COPY pytest.ini ${HOME}/pytest.ini
 
 ARG REQUIREMENTS_FILE
-COPY ${REQUIREMENTS_FILE} ${SAST_HOME}/${REQUIREMENTS_FILE}
-RUN pip install -r ${SAST_HOME}/${REQUIREMENTS_FILE}
+COPY ${REQUIREMENTS_FILE} ${HOME}/${REQUIREMENTS_FILE}
+RUN pip install -r ${HOME}/${REQUIREMENTS_FILE}
 
-ENV PYTHONPATH "${PYTHONPATH}:${SAST_HOME}/src"
 ENTRYPOINT [ "bash" ]
