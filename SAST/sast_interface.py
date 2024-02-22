@@ -1,6 +1,6 @@
 import abc
 import logging
-import sast.utils
+import sast.utils as utils
 
 from pathlib import Path
 from typing import Dict
