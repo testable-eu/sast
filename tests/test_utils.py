@@ -1,5 +1,5 @@
 import os
-from SAST.src import is_windows, get_exception_message, build_timestamp_language_name, zipdir
+from sast.utils import is_windows, get_exception_message, build_timestamp_language_name, zipdir
 from datetime import datetime
 import zipfile
 
@@ -25,6 +25,7 @@ class TestUtils:
         zip_file = zipfile.ZipFile(tmp_path / 'test.zip', 'w')
         zipdir('TestDir', zip_file)
         assert (tmp_path / 'test.zip').is_file()
+
 
     def test_load_sast_specific_config(self, monkeypatch):
         pass

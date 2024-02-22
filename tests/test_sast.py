@@ -1,7 +1,7 @@
-from pathlib import Path
 import pytest
+from pathlib import Path
 from unittest.mock import Mock, patch
-from SAST.src.sast import SAST
+from sast.sast_interface import SAST
 
 
 class SASTTestSubclass(SAST):

@@ -1,11 +1,10 @@
 import pytest
 from pathlib import Path
-from SAST.codeql import CodeQL_v_2_9_2
+from sast.codeql.codeql_v2_9_2.codeql import CodeQL_v_2_9_2
 
 test_resources_path = Path(__file__).resolve() / 'resources'
 
 
-@pytest.mark.asyncio
 class TestCodeQL:
 
     def test_inspector(self):
@@ -15,6 +14,7 @@ class TestCodeQL:
         assert inspection[0]["type"] == "xss"
         assert inspection[0]["line"] == 33
 
+    @pytest.mark.asyncio
     async def test_launcher(self, tmp_path):
         # TODO
         pass
