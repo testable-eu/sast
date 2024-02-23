@@ -5,3 +5,4 @@
 ## copy the content of those files hereafter
 #######################################################################
 PyYAML==6.0
+asyncio
