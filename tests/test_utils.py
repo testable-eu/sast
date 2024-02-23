@@ -1,6 +1,6 @@
 import os
 from sast.utils import is_windows, get_exception_message, build_timestamp_language_name, zipdir, \
-    load_sast_specific_config, filter_sast_tools, get_class_from_str
+    load_sast_specific_config, filter_sast_tools, get_class_from_str, sast_tool_version_match
 from datetime import datetime
 import zipfile
 from unittest.mock import patch, call
@@ -109,3 +109,23 @@ class TestUtils:
         result = get_class_from_str(class_str)
 
         assert result == os.path.abspath
+
+    def test_sast_tool_version_match_indifferent_to_saas_if_ignored(self):
+        assert sast_tool_version_match('1.0.0', 'saas') == True
+        assert sast_tool_version_match('saas', '2.0.0') == True
+
+    def test_sast_tool_version_match_takes_saas_into_account_if_not_ignored(self):
+        assert sast_tool_version_match('1.0.0', 'saas', ignore_saas=False) == False
+        assert sast_tool_version_match('saas', '2.0.0', ignore_saas=False) == False
+
+    def test_sast_tool_version_match_exact_versions(self):
+        assert sast_tool_version_match('1.0.0', '1.0.0') == True
+
+    def test_sast_tool_version_match_different_versions(self):
+        assert sast_tool_version_match('1.0.0', '2.0.0') == False
+
+    def test_sast_tool_version_match_in_max_version_digits_boundary(self):
+        assert sast_tool_version_match('1.0.0', '1.0.1', nv_max=2) == True
+
+    def test_sast_tool_version_match_exceed_max_version_digits_boundary(self):
+        assert sast_tool_version_match('1.0.0', '1.1.0', nv_max=2) == False
