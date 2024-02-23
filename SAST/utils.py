@@ -3,12 +3,11 @@ import zipfile
 from typing import NoReturn
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Callable
+from typing import Dict, List, Type, Any
 import yaml
 from sast.exceptions import InvalidSastTool, InvalidSastTools
-from sast.config import ROOT
+from sast.config import SAST_CONFIG_FILE, ROOT
 from importlib import import_module
-from sast.sast_interface import SAST
 
 
 def zipdir(path, zip_file: zipfile.ZipFile) -> NoReturn:
@@ -63,7 +62,7 @@ def load_yaml(fpath) -> Dict:
     return fdict
 
 
-def get_class_from_str(class_str: str) -> Callable[[], SAST]:
+def get_class_from_str(class_str: str) -> Type[Any]:
     try:
         module_path, class_name = class_str.rsplit('.', 1)
         module = import_module(module_path)
@@ -74,7 +73,7 @@ def get_class_from_str(class_str: str) -> Callable[[], SAST]:
 
 def load_sast_specific_config(tool_name: str, tool_version: str) -> Dict:
     try:
-        tool_config_path: Path = load_yaml(ROOT / 'sast-config.yaml')["tools"][tool_name]["version"][tool_version][
+        tool_config_path: Path = load_yaml(SAST_CONFIG_FILE)["tools"][tool_name]["version"][tool_version][
             "config"]
     except KeyError:
         e = InvalidSastTool(f"{tool_name}:{tool_version}")
@@ -90,3 +89,4 @@ def filter_sast_tools(itools: list[Dict], language: str, exception_raised=True) 
         e = InvalidSastTools()
         raise e
     return tools
+
