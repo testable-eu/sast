@@ -8,5 +8,5 @@ services:
       args:
         REQUIREMENTS_FILE: "requirements-test.txt"
     volumes:
-      - ./tests:/sast/tests
+      - ./tests:/SAST/tests
     entrypoint: "pytest"
