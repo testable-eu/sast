@@ -1,6 +1,16 @@
 version: "1.0"
 
 services:
+  codeql:
+    image: tpf_codeql
+    build:
+      context: ./sast/codeql
+      args:
+        HOME: 'SAST'
+      dockerfile: "./Dockerfile"
+    volumes:
+      - codeql:/codeql
+
   sast-test:
     build:
       context: .
@@ -9,4 +19,7 @@ services:
         REQUIREMENTS_FILE: "requirements-test.txt"
     volumes:
       - ./tests:/SAST/tests
+      - codeql:/codeql
     entrypoint: "pytest"
+volumes:
+  codeql:

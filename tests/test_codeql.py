@@ -1,5 +1,4 @@
 import pytest
-from pathlib import Path
 from sast.codeql.codeql_v2_9_2.codeql import CodeQL_v_2_9_2
 
 from tests.config import TEST_RESOURCES_DIR
@@ -15,6 +14,15 @@ class TestCodeQL:
         assert inspection[0]["line"] == 33
 
     @pytest.mark.asyncio
+    async def test_codeql_deploy(self):
+        version = await CodeQL_v_2_9_2().get_tool_version()
+        expected_version = '2.9.2'
+
+        assert version == expected_version
+
+    @pytest.mark.asyncio
     async def test_launcher(self, tmp_path):
         # TODO
         pass
+
+

@@ -1,45 +1,34 @@
 #!/usr/bin/env bash
 
+# Set script to exit on error
+set -e
+
 VERSION_LIST_FILE=$1
 CODEQL_DIR=/codeql
 
-mkdir $CODEQL_DIR
+# Create directory if it doesn't exist
+if [[ ! -e $CODEQL_DIR ]]; then
+    mkdir -p $CODEQL_DIR
+fi
 
-# Make sure the file contains a newline at the end
-echo -en '\n' >> "$VERSION_LIST_FILE"
-
-name=""
-link=""
-# Read the VERSION_LIST_FILE line by line
-while IFS=: read -r key value; do
-  # Remove leading/trailing spaces from the key and value (remove " as well)
-  key=$(echo "$key" | xargs)
-  value=$(echo "$value" | xargs | tr -d '\"')
-
-  # Check if the line contains "link" or "name" field
-  if [[ "$key" == "link" ]]; then
-    link=$value
-  elif [[ "$key" == "name" ]]; then
-    name=$value
-  fi
-
-  # Check if both name and link are set
-  if [[ -n "$name" && -n "$link" ]]; then
-    # Download the codeql version using wget, extract it and move it to the codeql directory
+# Function to download, extract and setup codeql version
+fetch_codeql() {
     echo "Downloading $name from $link"
-    wget -q "$link"
-    tar -xzf ./codeql-bundle-linux64.tar.gz -C "$CODEQL_DIR"
+    wget -q "$link" -O codeql-bundle.tar.gz
+    tar -xzf codeql-bundle.tar.gz -C "$CODEQL_DIR"
     mv "$CODEQL_DIR/codeql" "$CODEQL_DIR/$name"
-
-    # setup codeql version
     "$CODEQL_DIR/$name/codeql" resolve languages
     "$CODEQL_DIR/$name/codeql" resolve qlpacks
+    rm codeql-bundle.tar.gz
+}
 
-    # remove the downloaded .tar.gz
-    rm ./codeql-bundle-linux64.tar.gz
+# Process VERSION_LIST_FILE using Python3 to fetch name and link
+python - <<END | while read name link ; do fetch_codeql ; done
+import yaml
 
-    # Reset the variables for the next entry
-    name=""
-    link=""
-  fi
-done < "$VERSION_LIST_FILE"
+with open("codeql-versions-list.yaml", 'r') as stream:
+    versions = yaml.safe_load(stream)['versions']
+for version in versions:
+    if "name" in versions[version] and "link" in versions[version]:
+        print(versions[version]['name'], versions[version]['link'])
+END

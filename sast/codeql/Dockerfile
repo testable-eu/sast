@@ -19,5 +19,9 @@ COPY codeql-versions-list.yaml ${CODEQL_INTERFACE_DIR}
 RUN apt-get update
 RUN apt-get install wget
 
+# dependencies for codeql-install.sh
+RUN apt-get install wget python3 python3-pip python-is-python3 -y
+RUN pip3 install PyYAML
+
 # codeql installation
 RUN ${CODEQL_INTERFACE_DIR}/codeql-install.sh ${CODEQL_INTERFACE_DIR}/codeql-versions-list.yaml

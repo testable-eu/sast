@@ -1,6 +1,6 @@
 FROM malt33/php-cpg
 
-ARG HOME="/sast"
+ARG HOME="/SAST"
 WORKDIR $HOME
 
 RUN apt-get update
@@ -12,7 +12,6 @@ RUN apt-get install python3 python3-pip python-is-python3 -y
 COPY sast/ ${HOME}/sast
 COPY tests/ ${HOME}/tests
 
-COPY config.py ${HOME}/
 COPY config.py ${HOME}/
 COPY pytest.ini ${HOME}/pytest.ini
 
