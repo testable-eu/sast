@@ -68,7 +68,7 @@ def get_class_from_str(class_str: str) -> Type[Any]:
         module = import_module(module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as e:
-        raise ImportError(class_str)
+        raise ImportError(class_str) from e
 
 
 def load_sast_specific_config(tool_name: str, tool_version: str) -> Dict:
