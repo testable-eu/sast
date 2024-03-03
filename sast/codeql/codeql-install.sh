@@ -26,7 +26,7 @@ fetch_codeql() {
 python - <<END | while read name link ; do fetch_codeql ; done
 import yaml
 
-with open("codeql-versions-list.yaml", 'r') as stream:
+with open("$VERSION_LIST_FILE", 'r') as stream:
     versions = yaml.safe_load(stream)['versions']
 for version in versions:
     if "name" in versions[version] and "link" in versions[version]:
