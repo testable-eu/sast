@@ -4,8 +4,8 @@
 
 FROM adoptopenjdk/openjdk11
 
-ARG TPF_HOME="/tp-framework"
-ARG CODEQL_INTERFACE_DIR="${TPF_HOME}/SAST/codeql"
+ARG HOME
+ARG CODEQL_INTERFACE_DIR="${HOME}/sast/codeql"
 
 WORKDIR ${CODEQL_INTERFACE_DIR}
 

@@ -6,7 +6,7 @@ services:
     build:
       context: ./sast/codeql
       args:
-        HOME: 'SAST'
+        HOME: '/SAST'
       dockerfile: "./Dockerfile"
     volumes:
       - codeql:/codeql
