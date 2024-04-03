@@ -1,6 +1,6 @@
-# How to: Add a SAST tool
+This module aims to serve other projects with an arsenal of SAST tool interfaces, provided in one single `sast/` folder. The [tp-framework](https://github.com/testable-eu/sast-tp-framework) illustrates how this SAST module can be used by other projects.
 
-This module provides a arsenal of SAST tools available in the sast/ folder, as exemplified in the [tp-framework](https://github.com/testable-eu/sast-tp-framework).
+# How to: Add a SAST tool
 
 To add a SAST tools to your arsenal, please follows the steps listed hereafter and detailed in the chapters below:
 
