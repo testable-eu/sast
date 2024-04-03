@@ -1,0 +1,1 @@
+rootLoggerName = "SAST"
