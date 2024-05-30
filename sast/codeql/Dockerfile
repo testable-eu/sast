@@ -23,5 +23,8 @@ RUN apt-get install wget
 RUN apt-get install wget python3 python3-pip python-is-python3 -y
 RUN pip3 install PyYAML
 
+# Add execute permission to the script
+RUN chmod +x ${CODEQL_INTERFACE_DIR}/codeql-install.sh
+
 # codeql installation
 RUN ${CODEQL_INTERFACE_DIR}/codeql-install.sh ${CODEQL_INTERFACE_DIR}/codeql-versions-list.yaml
