@@ -3,9 +3,10 @@ import logging
 import sast.utils as utils
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Tuple, Optional
 from datetime import datetime
 from sast.logger_manager import logger_name
+from __future__ import annotations
 
 logger = logging.getLogger(logger_name(__name__))
 
@@ -39,6 +40,11 @@ class SAST(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     async def get_tool_version(self) -> str:
         raise NotImplementedError
+    
+
+    @abc.abstractmethod
+    async def populate_dataflow(self, sast_finding: SastFinding):
+        raise NotImplementedError
 
     @staticmethod
     def build_project_name(name: str, tool: str | None, language: str, timestamp: bool = True):
@@ -71,3 +77,31 @@ class SAST(metaclass=abc.ABCMeta):
     # simple sub-string but it could be elaborated more
     def vuln_match(vcand, vtarget):
         return vcand in vtarget
+
+
+class SastFinding(metaclass=abc.ABCMeta):
+    def __init__(self, file: str, sast_tool: SAST,  src_filename: str, src_line: str, dest_filename: str, dest_line: str, dataflow: Optional[Tuple[int]] = None):
+        self.file = file
+        self.sast_tool = sast_tool
+        self.src_filename = src_filename
+        self.src_line = src_line
+        self.dest_filename = dest_filename
+        self.dest_line = dest_line
+        self.dataflow = dataflow
+
+
+    def to_tuple(self) -> Tuple:
+        return (self.file, self.sast_tool, self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.dataflow)
+    
+
+    def to_dict(self) -> Dict:
+        return {
+            'file': self.file,
+            'sast_tool': self.sast_tool,
+            'src_filename': self.src_filename,
+            'src_line': self.src_line,
+            'dest_filename': self.dest_filename,
+            'dest_line': self.dest_line,
+            'dataflow': self.dataflow
+        }
+    
