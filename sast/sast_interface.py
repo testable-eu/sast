@@ -88,15 +88,11 @@ class SastFinding(metaclass=abc.ABCMeta):
         self.src_line = src_line
         self.dest_filename = dest_filename
         self.dest_line = dest_line
-        self.dataflow = dataflow
+        self.dataflow: List[Tuple[int, str]] = dataflow
         self.vuln_type = vuln_type
 
-
-    def get_all_attributes_as_tuple(self) -> Tuple:
-        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.dataflow, self.vuln_type)
-
-    def get_attributes_without_dataflow_as_tuple(self) -> Tuple:
-        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.vuln_type)
+    def get_comparison_tuple(self) -> Tuple:
+        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, tuple(self.dataflow))
 
 
     def get_alert(self) -> Dict:
@@ -115,5 +111,7 @@ class SastFinding(metaclass=abc.ABCMeta):
             'dest_filename': self.dest_filename,
             'dest_line': self.dest_line,
             'vuln_type': self.vuln_type,
+            'dataflow': self.dataflow
         }
+
     
