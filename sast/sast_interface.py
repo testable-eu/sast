@@ -4,7 +4,7 @@ import logging
 import sast.utils as utils
 
 from pathlib import Path
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 from datetime import datetime
 from sast.logger_manager import logger_name
 
@@ -44,8 +44,9 @@ class SAST(metaclass=abc.ABCMeta):
     
 
     @abc.abstractmethod
-    async def populate_dataflow(self, sast_finding: SastFinding):
+    async def populate_dataflow(self, sast_findings: List[SastFinding]) -> List[SastFinding]:
         raise NotImplementedError
+    
 
     @staticmethod
     def build_project_name(name: str, tool: str | None, language: str, timestamp: bool = True):
@@ -113,6 +114,6 @@ class SastFinding(metaclass=abc.ABCMeta):
             'src_line': self.src_line,
             'dest_filename': self.dest_filename,
             'dest_line': self.dest_line,
-            'dataflow': self.dataflow
+            'vuln_type': self.vuln_type,
         }
     
