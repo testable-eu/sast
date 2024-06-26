@@ -1,3 +1,4 @@
+from __future__ import annotations
 import abc
 import logging
 import sast.utils as utils
@@ -6,7 +7,7 @@ from pathlib import Path
 from typing import Dict, Tuple, Optional
 from datetime import datetime
 from sast.logger_manager import logger_name
-from __future__ import annotations
+
 
 logger = logging.getLogger(logger_name(__name__))
 
@@ -80,24 +81,34 @@ class SAST(metaclass=abc.ABCMeta):
 
 
 class SastFinding(metaclass=abc.ABCMeta):
-    def __init__(self, file: str, sast_tool: SAST,  src_filename: str, src_line: str, dest_filename: str, dest_line: str, dataflow: Optional[Tuple[int]] = None):
-        self.file = file
+    def __init__(self, sast_tool: SAST,  src_filename: str, src_line: str, dest_filename: str, dest_line: str, vuln_type: str,  dataflow: Optional[Tuple[int]] = None):
         self.sast_tool = sast_tool
         self.src_filename = src_filename
         self.src_line = src_line
         self.dest_filename = dest_filename
         self.dest_line = dest_line
         self.dataflow = dataflow
+        self.vuln_type = vuln_type
 
 
-    def to_tuple(self) -> Tuple:
-        return (self.file, self.sast_tool, self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.dataflow)
-    
+    def get_all_attributes_as_tuple(self) -> Tuple:
+        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.dataflow, self.vuln_type)
 
-    def to_dict(self) -> Dict:
+    def get_attributes_without_dataflow_as_tuple(self) -> Tuple:
+        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, self.vuln_type)
+
+
+    def get_alert(self) -> Dict:
         return {
-            'file': self.file,
-            'sast_tool': self.sast_tool,
+                'sast_tool': self.sast_tool.tool,
+                'file': self.dest_filename,
+                'file_row': self.dest_line,
+                'vuln_type': self.vuln_type,
+            }
+    
+    def get_summary(self) -> Dict:
+        return {
+            'sast_tool': self.sast_tool.tool,
             'src_filename': self.src_filename,
             'src_line': self.src_line,
             'dest_filename': self.dest_filename,
