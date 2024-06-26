@@ -8,7 +8,6 @@ from typing import Dict, Tuple, Optional, List
 from datetime import datetime
 from sast.logger_manager import logger_name
 
-
 logger = logging.getLogger(logger_name(__name__))
 
 
@@ -41,12 +40,10 @@ class SAST(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     async def get_tool_version(self) -> str:
         raise NotImplementedError
-    
 
     @abc.abstractmethod
     async def populate_dataflow(self, sast_findings: List[SastFinding]) -> List[SastFinding]:
         raise NotImplementedError
-    
 
     @staticmethod
     def build_project_name(name: str, tool: str | None, language: str, timestamp: bool = True):
@@ -82,7 +79,8 @@ class SAST(metaclass=abc.ABCMeta):
 
 
 class SastFinding(metaclass=abc.ABCMeta):
-    def __init__(self, sast_tool: SAST,  src_filename: str, src_line: str, dest_filename: str, dest_line: str, vuln_type: str,  dataflow: Optional[Tuple[int]] = None):
+    def __init__(self, sast_tool: SAST, src_filename: str, src_line: str, dest_filename: str, dest_line: str,
+                 vuln_type: str, dataflow: Optional[Tuple[int]] = None):
         self.sast_tool = sast_tool
         self.src_filename = src_filename
         self.src_line = src_line
@@ -92,17 +90,16 @@ class SastFinding(metaclass=abc.ABCMeta):
         self.vuln_type = vuln_type
 
     def get_comparison_tuple(self) -> Tuple:
-        return (self.src_filename, self.src_line, self.dest_filename, self.dest_line, tuple(self.dataflow))
-
+        return self.src_filename, self.src_line, self.dest_filename, self.dest_line, tuple(self.dataflow)
 
     def get_alert(self) -> Dict:
         return {
-                'sast_tool': self.sast_tool.tool,
-                'file': self.dest_filename,
-                'file_row': self.dest_line,
-                'vuln_type': self.vuln_type,
-            }
-    
+            'sast_tool': self.sast_tool.tool,
+            'file': self.dest_filename,
+            'file_row': self.dest_line,
+            'vuln_type': self.vuln_type,
+        }
+
     def get_summary(self) -> Dict:
         return {
             'sast_tool': self.sast_tool.tool,
@@ -113,5 +110,3 @@ class SastFinding(metaclass=abc.ABCMeta):
             'vuln_type': self.vuln_type,
             'dataflow': self.dataflow
         }
-
-    
