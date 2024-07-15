@@ -1,0 +1,11 @@
+# Mandatory configuration parameters
+name: "progpilot"
+version: "1.1.0"
+supported_languages:
+  - "PHP"
+tool_interface: "sast.progpilot.progpilot_v1_1_0.progpilot.Progpilot_v_1_1_0"
+supported_vulnerability:
+  xss: "xss"
+
+# Specific SAST config parameters
+installation_path: "/progpilot"
