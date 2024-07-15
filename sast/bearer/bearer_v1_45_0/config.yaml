@@ -1,0 +1,12 @@
+# Mandatory configuration parameters
+name: "bearer"
+version: "1.45.0"
+supported_languages:
+  - "PHP"
+tool_interface: "sast.bearer.bearer_v1_45_0.bearer.Bearer_v_1_45_0"
+supported_vulnerability:
+  xss: "xss"
+  sqli: "sqli"
+
+# Specific SAST config parameters
+installation_path: "/bearer"
