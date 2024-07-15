@@ -1,0 +1,11 @@
+# Mandatory configuration parameters
+name: "snyk"
+version: "1.1291.1"
+supported_languages:
+  - "PHP"
+tool_interface: "sast.snyk.snyk_v1_1291_1.snyk.Snyk_v_1_1291_1"
+supported_vulnerability:
+  xss: "xss"
+
+# Specific SAST config parameters
+installation_path: "/snyk"

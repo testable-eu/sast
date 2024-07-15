@@ -1,0 +1,4 @@
+versions:
+    1_1291_1:
+        name: "snyk_v1_1291_1"
+        link: "https://github.com/snyk/cli/releases/download/v1.1291.1/snyk-linux"
