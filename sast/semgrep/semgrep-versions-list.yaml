@@ -1,0 +1,7 @@
+versions:
+    # 2_9_2:
+    #    name: "codeql_v2_9_2"
+    #    link: "https://github.com/github/codeql-action/releases/download/codeql-bundle-20220512/codeql-bundle-linux64.tar.gz"
+    1_79_0:
+        name: "semgrep_v1_79_0"
+        link: "https://github.com/semgrep/semgrep/archive/refs/tags/v1.79.0.tar.gz"

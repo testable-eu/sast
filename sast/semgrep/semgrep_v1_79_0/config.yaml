@@ -1,0 +1,11 @@
+# Mandatory configuration parameters
+name: "semgrep"
+version: "1.79.0"
+supported_languages:
+  - "PHP"
+tool_interface: "sast.semgrep.semgrep_v1_79_0.semgrep.Semgrep_v_1_79_0"
+supported_vulnerability:
+  xss: "xss"
+
+# Specific SAST config parameters
+installation_path: "/semgrep"
