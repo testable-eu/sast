@@ -28,10 +28,8 @@ class Semgrep(SAST):
         proj_dir_tmp: Path = output_dir / project_name
         proj_dir_tmp.mkdir(parents=True, exist_ok=True)
         shutil.copytree(src_dir, proj_dir_tmp / "src")
-        print(f"AOOOOOOOOOOOOOOOOOOOOOOOO {self.SEMGREP_CONFIG['installation_path']}")
-        logger.info(f"DIO BESTIA {self.SEMGREP_CONFIG['installation_path']}")  
         src_root: Path = (proj_dir_tmp / "src").resolve()  
-        semgrep_analyze_cmd = f"{self.SEMGREP_CONFIG['installation_path']}/semgrep-1.79.0/cli/bin/semgrep scan -q --config 'p/xss' --config 'p/sql-injection' --config 'p/phpcs-security-audit' --json {src_root} > {proj_dir_tmp}/{project_name}.txt"
+        semgrep_analyze_cmd = f"{self.SEMGREP_CONFIG['installation_path']}/semgrep scan -q --config 'p/xss' --config 'p/sql-injection' --config 'p/phpcs-security-audit' --json {src_root} > {proj_dir_tmp}/{project_name}.txt"
         semgrep_analyze = await asyncio.create_subprocess_shell(semgrep_analyze_cmd)
         await semgrep_analyze.wait()
         self.logging(what="launcher", message=f"scanning", status="done.")
@@ -60,3 +58,6 @@ class Semgrep(SAST):
 
     async def get_tool_version(self) -> str:
         return self.SEMGREP_CONFIG["version"]
+    
+    async def populate_dataflow(self, sast_findings):
+        return super().populate_dataflow(sast_findings)

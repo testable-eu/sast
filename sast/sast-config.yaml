@@ -2,14 +2,34 @@
 # SAST tools config
 ###############################################################
 tools:
-  codeql:
+#  codeql:
+#    version:
+#      # 2.9.2:
+#      #  config: "./codeql/codeql_v2_9_2/config.yaml"
+#      #  deploy: true
+#      2.13.1:
+#        config: "./codeql/codeql_v2_13_1/config.yaml"
+#        deploy: false
+  snyk:
     version:
-      # 2.9.2:
-      #  config: "./codeql/codeql_v2_9_2/config.yaml"
-      #  deploy: true
-      2.13.1:
-        config: "./codeql/codeql_v2_13_1/config.yaml"
+      1.1291.1:
+        config: "./snyk/snyk_v1_1291_1/config.yaml"
         deploy: true
+  progpilot:
+    version:
+      1.1.0:
+        config: "./progpilot/progpilot_v1_1_0/config.yaml"
+        deploy: true
+  semgrep:
+    version:
+      1.79.0:
+        config: "./semgrep/semgrep_v1_79_0/config.yaml"
+        deploy: true
+  bearer:
+    version:
+      1.45.0:
+        config: "./bearer/bearer_v1_45_0/config.yaml"
+        deploy: true    
 
 ###############################################################
 # Programming language config
@@ -22,10 +42,10 @@ tools:
 ###############################################################
 language:
   php:
-    sast_compile: false
+    sast_compile: true
     compile_default_instruction: "php -d opcache.enable_cli=1 -d opcache.opt_debug_level=0x10000 <src>"
   java:
-    sast_compile: true
+    sast_compile: false
     compile_default_instruction: "javac -cp <lib> <src>"
   js:
     sast_compile: false

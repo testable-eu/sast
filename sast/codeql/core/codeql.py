@@ -99,3 +99,6 @@ class CodeQL(SAST):
 
     async def get_tool_version(self) -> str:
         return self.CODEQL_CONFIG["version"]
+
+    async def populate_dataflow(self, sast_findings):
+        return super().populate_dataflow(sast_findings)
