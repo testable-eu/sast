@@ -26,15 +26,7 @@ class SAST(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def inspector(self, sast_res_file: Path, language: str) -> list[Dict]:
-        """
-        Shall return a list of Dict s.t. :
-        [{
-            type: "",
-            file: "",
-            line: ""
-        }, ...]
-        """
+    def inspector(self, sast_res_file: Path, language: str) -> List[SastFinding]:
         raise NotImplementedError
 
     @abc.abstractmethod
