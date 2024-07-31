@@ -7,9 +7,9 @@ tools:
 #      # 2.9.2:
 #      #  config: "./codeql/codeql_v2_9_2/config.yaml"
 #      #  deploy: true
-#      2.13.1:
-#        config: "./codeql/codeql_v2_13_1/config.yaml"
-#        deploy: false
+      2.13.1:
+        config: "./codeql/codeql_v2_13_1/config.yaml"
+        deploy: true
   snyk:
     version:
       1.1291.1:
@@ -42,10 +42,10 @@ tools:
 ###############################################################
 language:
   php:
-    sast_compile: true
+    sast_compile: false
     compile_default_instruction: "php -d opcache.enable_cli=1 -d opcache.opt_debug_level=0x10000 <src>"
   java:
-    sast_compile: false
+    sast_compile: true
     compile_default_instruction: "javac -cp <lib> <src>"
   js:
     sast_compile: false
