@@ -9,7 +9,7 @@ from typing import Dict
 
 import sast.config
 from sast.logger_manager import logger_name
-from sast.sast_interface import SAST
+from sast.sast_interface import SAST, SastFinding
 import config
 
 logger = logging.getLogger(logger_name(__name__))
@@ -39,19 +39,21 @@ class Progpilot(SAST):
         self.logging(what="launcher", message=f"result {res}", status="done.")
         return res
 
-    def inspector(self, sast_res_file: Path, language: str) -> list[Dict]:
+    def inspector(self, sast_res_file: Path, language: str) -> list[SastFinding]:
         self.logging(what="inspector", status="started...")
         with open(sast_res_file) as res_file:
             progpilot_report: Dict = json.load(res_file)
 
-        findings: list[Dict] = []
+        findings: list[SastFinding] = []
         for elem in progpilot_report:
-            finding: Dict = {
-                "type": elem["vuln_name"],
-                "type_orig": "",
-                "file": elem["sink_file"],
-                "line": elem["sink_line"]
-            }
+            finding = SastFinding(
+                self.tool,
+                elem["source_file"][0],
+                elem["source_line"][0],
+                elem["sink_file"],
+                elem["sink_line"],
+                elem["vuln_name"]
+            )
             findings.append(finding)
             #self.logging(what="inspector", message=f"{findings}")#manudebug
         self.logging(what="inspector", status="done.")

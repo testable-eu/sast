@@ -9,13 +9,13 @@ from typing import Dict
 
 import sast.config
 from sast.logger_manager import logger_name
-from sast.sast_interface import SAST
+from sast.sast_interface import SAST, SastFinding
 import config
 
 logger = logging.getLogger(logger_name(__name__))
 
 class Snyk(SAST):
-    tool = "propilot"
+    tool = "snyk"
 
     SNYK_SCRIPT_DIR: Path = None
     SNYK_CONFIG_FILE: Path = None
@@ -39,20 +39,22 @@ class Snyk(SAST):
         self.logging(what="launcher", message=f"result {res}", status="done.")
         return res
 
-    def inspector(self, sast_res_file: Path, language: str) -> list[Dict]:
+    def inspector(self, sast_res_file: Path, language: str) -> list[SastFinding]:
         self.logging(what="inspector", status="started...")
         with open(sast_res_file) as res_file:
             snyk_report: Dict = json.load(res_file)
 
-        findings: list[Dict] = []
+        findings: list[SastFinding] = []
         for run in snyk_report["runs"]:
             for elem in run["results"]:
-                finding: Dict = {
-                    "type": elem["ruleId"].split('/')[1].lower(),
-                    "type_orig": "",
-                    "file": elem["codeFlows"][0]["threadFlows"][-1]["locations"][-1]["location"]["physicalLocation"]["artifactLocation"]["uri"],
-                    "line": elem["codeFlows"][0]["threadFlows"][-1]["locations"][-1]["location"]["physicalLocation"]["region"]["startLine"]
-                }
+                finding = SastFinding(
+                    self.tool,
+                    elem["codeFlows"][0]["threadFlows"][-1]["locations"][0]["location"]["physicalLocation"]["artifactLocation"]["uri"],
+                    elem["codeFlows"][0]["threadFlows"][-1]["locations"][0]["location"]["physicalLocation"]["region"]["startLine"],
+                    elem["codeFlows"][0]["threadFlows"][-1]["locations"][-1]["location"]["physicalLocation"]["artifactLocation"]["uri"],
+                    elem["codeFlows"][0]["threadFlows"][-1]["locations"][-1]["location"]["physicalLocation"]["region"]["startLine"],
+                    elem["ruleId"].split('/')[1].lower()
+                )
                 findings.append(finding)
                 #self.logging(what="inspector", message=f"{findings}")#manudebug
         self.logging(what="inspector", status="done.")

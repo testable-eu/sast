@@ -94,7 +94,7 @@ class SastFinding(metaclass=abc.ABCMeta):
 
     def get_alert(self) -> Dict:
         return {
-            'sast_tool': self.sast_tool.tool,
+            'sast_tool': self.sast_tool,
             'file': self.dest_filename,
             'file_row': self.dest_line,
             'vuln_type': self.vuln_type,
@@ -102,7 +102,7 @@ class SastFinding(metaclass=abc.ABCMeta):
 
     def get_summary(self) -> Dict:
         return {
-            'sast_tool': self.sast_tool.tool,
+            'sast_tool': self.sast_tool,
             'src_filename': self.src_filename,
             'src_line': self.src_line,
             'dest_filename': self.dest_filename,
