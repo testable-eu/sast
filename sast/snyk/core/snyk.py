@@ -56,7 +56,6 @@ class Snyk(SAST):
                     elem["ruleId"].split('/')[1].lower()
                 )
                 findings.append(finding)
-                #self.logging(what="inspector", message=f"{findings}")#manudebug
         self.logging(what="inspector", status="done.")
         return findings
 

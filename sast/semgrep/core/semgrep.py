@@ -9,10 +9,18 @@ from typing import Dict
 
 import sast.config
 from sast.logger_manager import logger_name
-from sast.sast_interface import SAST
+from sast.sast_interface import SAST,SastFinding
 import config
 
 logger = logging.getLogger(logger_name(__name__))
+
+vuln_mapping = {
+    "Cross-Site-Scripting (XSS)": "xss",
+    "SQL Injection": "sqli",
+    "Mishandled Sensitive Information":"ig"
+    # Add other vulnerability types here as needed
+}
+
 
 class Semgrep(SAST):
     tool = "semgrep"
@@ -43,16 +51,17 @@ class Semgrep(SAST):
         with open(sast_res_file) as res_file:
             semgrep_report: Dict = json.load(res_file)
 
-        findings: list[Dict] = []
+        findings: list[SastFinding] = []
         for result in semgrep_report["results"]:
-            finding: Dict = {
-                "type": result["extra"]["metadata"]["vulnerability_class"],
-                "type_orig": result["check_id"],
-                "file": result["path"],
-                "line": result["end"]["line"]
-            }
+            finding = SastFinding(
+                self.tool,
+                result["extra"].get("dataflow_trace", {}).get("taint_source", [])[1][0].get("path", "") if result["extra"].get("dataflow_trace") and result["extra"]["dataflow_trace"].get("taint_source") and len(result["extra"]["dataflow_trace"]["taint_source"]) > 1 else "",
+                result["extra"].get("dataflow_trace", {}).get("taint_source", [])[1][0].get("start", {}).get("line", "") if result["extra"].get("dataflow_trace") and result["extra"]["dataflow_trace"].get("taint_source") and len(result["extra"]["dataflow_trace"]["taint_source"]) > 1 else 0,
+                result["path"].split("/src/")[1],
+                result["end"]["line"],
+                next((vuln_mapping[vuln_name] for vuln_name in result["extra"]["metadata"]["vulnerability_class"] if vuln_name in vuln_mapping), 'unknown')
+            )
             findings.append(finding)
-            #self.logging(what="inspector", message=f"{findings}")#manudebug
         self.logging(what="inspector", status="done.")
         return findings
 

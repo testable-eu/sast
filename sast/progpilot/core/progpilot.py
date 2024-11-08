@@ -48,14 +48,13 @@ class Progpilot(SAST):
         for elem in progpilot_report:
             finding = SastFinding(
                 self.tool,
-                elem["source_file"][0],
+                elem["source_file"][0].split("/src/")[1],
                 elem["source_line"][0],
-                elem["sink_file"],
+                elem["sink_file"].split("/src/")[1],
                 elem["sink_line"],
                 elem["vuln_name"]
             )
             findings.append(finding)
-            #self.logging(what="inspector", message=f"{findings}")#manudebug
         self.logging(what="inspector", status="done.")
         return findings
 
