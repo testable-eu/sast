@@ -9,7 +9,7 @@ from typing import Dict
 
 import sast.config
 from sast.logger_manager import logger_name
-from sast.sast_interface import SAST
+from sast.sast_interface import SAST, SastFinding
 import config
 
 logger = logging.getLogger(logger_name(__name__))
@@ -43,16 +43,20 @@ class Bearer(SAST):
         with open(sast_res_file) as res_file:
             bearer_report: Dict = json.load(res_file)
 
-        findings: list[Dict] = []
-        for risk in bearer_report["risks"]:
-            for elem in risk["locations"]:
-                finding: Dict = {
-                    "type": risk["detector_id"],
-                    "type_orig": risk["detector_id"],
-                    "file": elem["filename"],
-                    "line": elem["end_line_number"]
-                }
+        findings: list[SastFinding] = []
+
+        for risk in bearer_report.get("risks",[]):
+            for elem in risk.get("locations",[]):
+                finding = SastFinding(
+                    self.tool,
+                    elem.get("source",{}).get("filename", "") ,
+                    elem.get("source",{}).get("end_line_number", 0),
+                    elem.get("filename", ""),
+                    elem.get("end_line_number",0),
+                    risk["detector_id"]
+                )
                 findings.append(finding)
+        
         self.logging(what="inspector", status="done.")
         return findings
 
